@@ -37,4 +37,10 @@ public class ProductServices {
         productToEdit.setStockAmount(product.getStockAmount());
         addToDb(productToEdit);
     }
+
+    public void delete(long id){
+        Optional<Product> optProductToDelete = rep.findById(id);
+        Product productToDelete = optProductToDelete.get();
+        rep.delete(productToDelete);
+    }
 }
