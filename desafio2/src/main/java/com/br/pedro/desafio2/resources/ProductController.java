@@ -4,6 +4,7 @@ import com.br.pedro.desafio2.dto.ProductDTO;
 import com.br.pedro.desafio2.entity.Product;
 import com.br.pedro.desafio2.service.ProductServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,22 +18,34 @@ public class ProductController {
 
 
     @PostMapping
-    public void save(@RequestBody Product product) {
+    public ResponseEntity save(@RequestBody Product product) {
+
         services.addToDb(product);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public List<ProductDTO> listAll() {
-        return services.getAll();
+    public ResponseEntity listAll() {
+
+        return ResponseEntity.ok(services.getAll());
     }
 
     @PutMapping("/{id}")
-    public void edit(@PathVariable long id, @RequestBody Product product) {
-        services.update(id, product);
+    public ResponseEntity edit(@PathVariable long id, @RequestBody Product product) {
+        product.setId(id);
+
+        ProductDTO p = services.update(id, product);
+
+        return p != null ?
+                ResponseEntity.ok(p):
+                ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable long id) {
+    public ResponseEntity delete(@PathVariable long id) {
+
         services.delete(id);
+
+        return ResponseEntity.ok().build();
     }
 }

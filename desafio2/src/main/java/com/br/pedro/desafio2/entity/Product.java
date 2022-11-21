@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -27,7 +24,9 @@ public class Product {
     private String code;
     private String color;
     private String series;
+    @Column(name = "fabrication_date")
     private String fabDate;
+    @Column(name = "expiration_date")
     private String expDate;
     private String material;
     private String description;
