@@ -20,6 +20,7 @@ public class ProductDTO {
     private String material;
     private String description;
 
+
     public static ProductDTO create(Product product){
         ModelMapper modelMapper = new ModelMapper();
         return modelMapper.map(product, ProductDTO.class);

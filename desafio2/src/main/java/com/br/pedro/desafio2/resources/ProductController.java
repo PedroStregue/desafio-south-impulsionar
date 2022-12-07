@@ -3,10 +3,20 @@ package com.br.pedro.desafio2.resources;
 import com.br.pedro.desafio2.dto.ProductDTO;
 import com.br.pedro.desafio2.entity.Product;
 import com.br.pedro.desafio2.service.ProductServices;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.*;
+import java.net.URI;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,9 +30,23 @@ public class ProductController {
     @PostMapping
     public ResponseEntity save(@RequestBody Product product) {
 
-        services.addToDb(product);
-        return ResponseEntity.ok().build();
+        ProductDTO p = services.addToDb(product);
+
+        URI location = getUri(p.getId());
+        return ResponseEntity.created(location).build();
     }
+
+    private URI getUri(Long id) {
+        return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(id).toUri();
+    }
+
+    /*@GetMapping("/{id}")
+    public ResponseEntity getById(@PathVariable long id){
+        ProductDTO product = services.findById(id);
+
+        return
+    }*/
 
     @GetMapping
     public ResponseEntity listAll() {
@@ -46,6 +70,16 @@ public class ProductController {
 
         services.delete(id);
 
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity importCSV(@RequestParam("file") MultipartFile file){
+        try{
+            services.insertByCSV(file.getInputStream());
+        }catch(IOException e){
+            e.printStackTrace();
+        }
         return ResponseEntity.ok().build();
     }
 }

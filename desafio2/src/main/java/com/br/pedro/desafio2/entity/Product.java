@@ -1,9 +1,6 @@
 package com.br.pedro.desafio2.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,6 +9,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 @NoArgsConstructor
+@Builder
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,4 +28,6 @@ public class Product {
     private String expDate;
     private String material;
     private String description;
+
+
 }
