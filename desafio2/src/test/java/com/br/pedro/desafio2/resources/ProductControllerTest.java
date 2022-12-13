@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -42,7 +44,8 @@ public class ProductControllerTest {
     @Test
     void getAllShouldReturnProductDto() throws Exception {
         var result = mockMvc.perform(MockMvcRequestBuilders.get(URL)
-                .contentType(MediaType.APPLICATION_JSON));
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("user:admin".getBytes()))
+                        .contentType(MediaType.APPLICATION_JSON));
 
         result.andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
@@ -58,8 +61,7 @@ public class ProductControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].fabDate").value("11/11/1111"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].expDate").value("11/11/1111"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[0].material").value("material1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].description").value("description1"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.[7].id").doesNotExist());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].description").value("description1"));
     }
 
     @Test
@@ -67,6 +69,7 @@ public class ProductControllerTest {
         var product = ProductCreator.createFixedRequest();
         var jsonBody = objectMapper.writeValueAsString(product);
         var result = mockMvc.perform(MockMvcRequestBuilders.post(URL)
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("user:admin".getBytes()))
                 .content(jsonBody)
                 .contentType(MediaType.APPLICATION_JSON));
 
@@ -79,6 +82,7 @@ public class ProductControllerTest {
     @Test
     void findByIdShouldReturnProductDto() throws Exception {
         var result = mockMvc.perform(MockMvcRequestBuilders.get(URL.concat("/{id}"), 1)
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("user:admin".getBytes()))
                 .contentType(MediaType.APPLICATION_JSON));
 
         result.andDo(MockMvcResultHandlers.print());
@@ -99,11 +103,13 @@ public class ProductControllerTest {
 
     @Test
     void deleteShouldReturnStatusOk() throws Exception {
-        var result = mockMvc.perform(MockMvcRequestBuilders.delete(URL.concat("/{id}"),1));
+        var result = mockMvc.perform(MockMvcRequestBuilders.delete(URL.concat("/{id}"),1)
+                    .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("user:admin".getBytes())));
 
         result.andDo(MockMvcResultHandlers.print());
         result.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
         var getAllList = mockMvc.perform(MockMvcRequestBuilders.get(URL)
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("user:admin".getBytes()))
                 .contentType(MediaType.APPLICATION_JSON));
         getAllList.andExpect(MockMvcResultMatchers.jsonPath("$.[0].id").value(2));
     }
@@ -113,6 +119,7 @@ public class ProductControllerTest {
         var product = ProductCreator.updateRequest();
         var jsonBody = objectMapper.writeValueAsString(product);
         var result = mockMvc.perform(MockMvcRequestBuilders.put(URL.concat("/{id}"),1)
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("user:admin".getBytes()))
                 .content(jsonBody).contentType(MediaType.APPLICATION_JSON));
 
         result.andDo(MockMvcResultHandlers.print());
@@ -133,7 +140,8 @@ public class ProductControllerTest {
 
     @Test
     void shouldReturnNotFoundWhenSearchingNonExistingId() throws Exception {
-        var result = mockMvc.perform(MockMvcRequestBuilders.get(URL.concat("/{id}"), 10)
+        var result = mockMvc.perform(MockMvcRequestBuilders.get(URL.concat("/{id}"), 50)
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("user:admin".getBytes()))
                 .contentType(MediaType.APPLICATION_JSON));
 
         result.andDo(MockMvcResultHandlers.print());
@@ -154,8 +162,11 @@ public class ProductControllerTest {
         Assertions.assertNotNull(multipartFile);
 
         var result = mockMvc.perform(MockMvcRequestBuilders
-                .multipart(URL.concat("/import"))
-                        .file(multipartFile));
+                        .multipart(URL.concat("/import"))
+                        .file(multipartFile)
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("user:admin".getBytes())));
+
+
         result.andDo(MockMvcResultHandlers.print());
         result.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
         result.andExpect(MockMvcResultMatchers.jsonPath("$.[0].id").exists());
@@ -173,7 +184,8 @@ public class ProductControllerTest {
     }
     @Test
     void shouldReturnNotFoundWhenTryingToDeleteInvalidId() throws Exception {
-        var result = mockMvc.perform(MockMvcRequestBuilders.delete(URL.concat("/{id}"),15));
+        var result = mockMvc.perform(MockMvcRequestBuilders.delete(URL.concat("/{id}"),15)
+                .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("user:admin".getBytes())));
 
         result.andDo(MockMvcResultHandlers.print());
         result.andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -195,6 +207,7 @@ public class ProductControllerTest {
         var product = ProductCreator.updateRequest();
         var jsonBody = objectMapper.writeValueAsString(product);
         var result = mockMvc.perform(MockMvcRequestBuilders.put(URL.concat("/{id}"),15)
+                        .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("user:admin".getBytes()))
             .content(jsonBody).contentType(MediaType.APPLICATION_JSON));
 
         result.andDo(MockMvcResultHandlers.print());
