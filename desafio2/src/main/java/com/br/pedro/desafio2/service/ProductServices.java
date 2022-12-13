@@ -1,20 +1,23 @@
 package com.br.pedro.desafio2.service;
 
+import com.br.pedro.desafio2.convert.ProductConvert;
 import com.br.pedro.desafio2.dto.ProductDTO;
 import com.br.pedro.desafio2.entity.Product;
+import com.br.pedro.desafio2.exception.ObjectNotFoundException;
 import com.br.pedro.desafio2.repository.ProductRepository;
 import com.opencsv.CSVReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +25,7 @@ public class ProductServices {
     @Autowired
     ProductRepository rep;
 
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     public ProductDTO addToDb(Product product){
         Assert.isNull(product.getId(),"Não foi possível inserir o registro");
@@ -29,17 +33,18 @@ public class ProductServices {
         product.setBarCode(generateBarCode(12));
         product.setCode(generateCode(9));
 
-        return ProductDTO.create(rep.save(product));
+        return ProductConvert.entityToDTO(rep.save(product));
     }
 
     public List<ProductDTO> getAll(){
-        List<ProductDTO> list = rep.findAll().stream().map(ProductDTO::create).collect(Collectors.toList());
+        List<ProductDTO> list = rep.findAll().stream().map(ProductConvert::entityToDTO).collect(Collectors.toList());
         return list;
     }
 
-    public void findById(long id){
+    public ProductDTO findById(long id){
         Optional<Product> product = rep.findById(id);
 
+        return product.map(ProductConvert::entityToDTO).orElseThrow(() -> new ObjectNotFoundException("Produto não encontrado"));
     }
 
     public ProductDTO update(long id, Product product){
@@ -62,22 +67,27 @@ public class ProductServices {
             productToEdit.setExpDate(product.getExpDate());
             productToEdit.setFabDate(product.getFabDate());
             rep.save(productToEdit);
-            return ProductDTO.create(productToEdit);
+            return ProductConvert.entityToDTO(productToEdit);
         }else{
             return null;
         }
     }
 
-    public void delete(long id){
+    public ResponseEntity delete(long id){
         Optional<Product> optProductToDelete = rep.findById(id);
-        Product productToDelete = optProductToDelete.get();
-        rep.delete(productToDelete);
+        if(optProductToDelete.isPresent()){
+            rep.deleteById(id);
+            return ResponseEntity.ok().build();
+        }else{
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
-    public List<ProductDTO> insertByCSV(InputStream is){
+    public List<ProductDTO> insertByCSV(MultipartFile file){
         List<ProductDTO> list = new ArrayList<>();
         try{
-            CSVReader csvReader = new CSVReader(new BufferedReader(new InputStreamReader(is,"UTF-8")));
+            CSVReader csvReader = new CSVReader(new BufferedReader(new InputStreamReader(file.getInputStream(),"UTF-8")));
             String[] headers = csvReader.readNext();
             for(String header:headers){
                 System.out.println(header);
@@ -103,14 +113,14 @@ public class ProductServices {
                 System.out.println(tax);
                 Double finalValue = value*tax;
                 System.out.println(finalValue);
-                String fabricationDate = line.get(8);
-                String expirationDate = line.get(9);
+                String fabDate = line.get(8);
+                String expDate = line.get(9);
                 String color = line.get(10);
                 String material = line.get(11);
                 Product product = Product.builder().code(code).barCode(barCode).series(series).name(name)
-                        .description(description).category(category).price(finalValue).fabDate(fabricationDate)
-                        .expDate(expirationDate).color(color).material(material).build();
-                list.add(ProductDTO.create(rep.save(product)));
+                        .description(description).category(category).price(finalValue).fabDate(fabDate)
+                        .expDate(expDate).color(color).material(material).build();
+                list.add(ProductConvert.entityToDTO(rep.save(product)));
             });
         }catch(Exception e){
             e.printStackTrace();

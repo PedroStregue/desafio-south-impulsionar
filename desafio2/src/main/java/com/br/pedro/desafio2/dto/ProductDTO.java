@@ -1,10 +1,16 @@
 package com.br.pedro.desafio2.dto;
 
 import com.br.pedro.desafio2.entity.Product;
+import lombok.Builder;
 import lombok.Data;
+import lombok.With;
 import org.modelmapper.ModelMapper;
 
+import java.util.Date;
+
 @Data
+@Builder
+@With
 public class ProductDTO {
     private Long id;
     private String name;

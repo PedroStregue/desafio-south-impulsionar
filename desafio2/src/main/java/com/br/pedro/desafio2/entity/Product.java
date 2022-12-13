@@ -3,6 +3,7 @@ package com.br.pedro.desafio2.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Builder
+@With
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

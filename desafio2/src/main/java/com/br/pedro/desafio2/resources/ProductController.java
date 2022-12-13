@@ -33,7 +33,9 @@ public class ProductController {
         ProductDTO p = services.addToDb(product);
 
         URI location = getUri(p.getId());
-        return ResponseEntity.created(location).build();
+        return p != null ?
+                ResponseEntity.created(location).build() :
+                ResponseEntity.badRequest().build();
     }
 
     private URI getUri(Long id) {
@@ -41,12 +43,12 @@ public class ProductController {
                 .buildAndExpand(id).toUri();
     }
 
-    /*@GetMapping("/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity getById(@PathVariable long id){
         ProductDTO product = services.findById(id);
 
-        return
-    }*/
+        return ResponseEntity.ok(product);
+    }
 
     @GetMapping
     public ResponseEntity listAll() {
@@ -68,18 +70,15 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable long id) {
 
-        services.delete(id);
+        var response = services.delete(id);
 
-        return ResponseEntity.ok().build();
+        return response;
     }
 
     @PostMapping("/import")
     public ResponseEntity importCSV(@RequestParam("file") MultipartFile file){
-        try{
-            services.insertByCSV(file.getInputStream());
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok().build();
+        var productsList = services.insertByCSV(file);
+
+        return ResponseEntity.ok(productsList);
     }
 }
