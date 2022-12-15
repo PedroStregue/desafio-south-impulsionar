@@ -1,17 +1,18 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/product
-    username: postgres
-    password: admin
+    url: ${URL_POSTGRES}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+
   jpa:
     properties:
       hibernate:
         jdbc:
           lob:
             non_contextual_creation: true
-          format_sql: true
+        format_sql: true
     hibernate:
-      ddl_auto: update
+       ddl_auto: update
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQL9Dialect
   flyway:

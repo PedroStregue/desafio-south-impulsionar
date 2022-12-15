@@ -3,15 +3,28 @@ version: "3.1"
 
 services:
 
+  produtos_api:
+    container_name: products_api
+    image: image-product:v1
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - URL_POSTGRES=jdbc:postgresql://db_produtos_api:5432/product
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - db_produtos_api
 
   db_produtos_api:
+    container_name: db_produtos_api
+
     image: postgres
     restart: always
     ports:
-      - 5435:5432
-    expose:
-      - "5435"
+      - "5435:5432"
     environment:
-      POSTGRES_DB: product
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
+      - POSTGRES_DB=product
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
