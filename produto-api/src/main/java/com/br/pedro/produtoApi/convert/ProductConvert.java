@@ -1,7 +1,7 @@
-package com.br.pedro.desafio2.convert;
+package com.br.pedro.produtoApi.convert;
 
-import com.br.pedro.desafio2.dto.ProductDTO;
-import com.br.pedro.desafio2.entity.Product;
+import com.br.pedro.produtoApi.dto.ProductDTO;
+import com.br.pedro.produtoApi.entity.Product;
 
 public class ProductConvert {
 

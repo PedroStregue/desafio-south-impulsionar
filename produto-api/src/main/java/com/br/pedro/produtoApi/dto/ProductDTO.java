@@ -1,12 +1,10 @@
-package com.br.pedro.desafio2.dto;
+package com.br.pedro.produtoApi.dto;
 
-import com.br.pedro.desafio2.entity.Product;
+import com.br.pedro.produtoApi.entity.Product;
 import lombok.Builder;
 import lombok.Data;
 import lombok.With;
 import org.modelmapper.ModelMapper;
-
-import java.util.Date;
 
 @Data
 @Builder

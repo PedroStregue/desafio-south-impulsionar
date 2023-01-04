@@ -1,24 +1,15 @@
-package com.br.pedro.desafio2.resources;
+package com.br.pedro.produtoApi.resources;
 
-import com.br.pedro.desafio2.dto.ProductDTO;
-import com.br.pedro.desafio2.entity.Product;
-import com.br.pedro.desafio2.service.ProductServices;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-import com.opencsv.bean.CsvToBeanBuilder;
+import com.br.pedro.produtoApi.dto.ProductDTO;
+import com.br.pedro.produtoApi.entity.Product;
+import com.br.pedro.produtoApi.service.ProductServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.*;
 import java.net.URI;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")

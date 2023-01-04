@@ -1,4 +1,4 @@
-package com.br.pedro.desafio2.exception;
+package com.br.pedro.produtoApi.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

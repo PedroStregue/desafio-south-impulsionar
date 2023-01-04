@@ -1,9 +1,8 @@
-package com.br.pedro.desafio2.entity;
+package com.br.pedro.produtoApi.entity;
 
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Data

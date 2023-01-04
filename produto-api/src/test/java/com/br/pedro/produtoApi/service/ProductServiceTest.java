@@ -1,23 +1,17 @@
-package com.br.pedro.desafio2.service;
+package com.br.pedro.produtoApi.service;
 
-import com.br.pedro.desafio2.convert.ProductConvert;
-import com.br.pedro.desafio2.creator.ProductCreator;
-import com.br.pedro.desafio2.dto.ProductDTO;
-import com.br.pedro.desafio2.entity.Product;
-import com.br.pedro.desafio2.repository.ProductRepository;
+import com.br.pedro.produtoApi.creator.ProductCreator;
+import com.br.pedro.produtoApi.entity.Product;
+import com.br.pedro.produtoApi.repository.ProductRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;

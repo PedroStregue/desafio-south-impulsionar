@@ -98,7 +98,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.br.pedro.desafio2.Desafio2Application</mainClass>
+							<mainClass>com.br.pedro.produtoApi.ProdutoApiApplication</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

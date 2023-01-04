@@ -1,10 +1,10 @@
-package com.br.pedro.desafio2.service;
+package com.br.pedro.produtoApi.service;
 
-import com.br.pedro.desafio2.convert.ProductConvert;
-import com.br.pedro.desafio2.dto.ProductDTO;
-import com.br.pedro.desafio2.entity.Product;
-import com.br.pedro.desafio2.exception.ObjectNotFoundException;
-import com.br.pedro.desafio2.repository.ProductRepository;
+import com.br.pedro.produtoApi.convert.ProductConvert;
+import com.br.pedro.produtoApi.dto.ProductDTO;
+import com.br.pedro.produtoApi.entity.Product;
+import com.br.pedro.produtoApi.exception.ObjectNotFoundException;
+import com.br.pedro.produtoApi.repository.ProductRepository;
 import com.opencsv.CSVReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +13,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package com.br.pedro.desafio2.config.security;
+package com.br.pedro.produtoApi.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

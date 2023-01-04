@@ -1,13 +1,13 @@
-package com.br.pedro.desafio2;
+package com.br.pedro.produtoApi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Desafio2Application {
+public class ProdutoApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Desafio2Application.class, args);
+		SpringApplication.run(ProdutoApiApplication.class, args);
 	}
 
 }

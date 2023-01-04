@@ -1,7 +1,6 @@
-package com.br.pedro.desafio2.creator;
+package com.br.pedro.produtoApi.creator;
 
-import com.br.pedro.desafio2.dto.ProductDTO;
-import com.br.pedro.desafio2.entity.Product;
+import com.br.pedro.produtoApi.entity.Product;
 import com.github.javafaker.Faker;
 
 import java.text.ParseException;

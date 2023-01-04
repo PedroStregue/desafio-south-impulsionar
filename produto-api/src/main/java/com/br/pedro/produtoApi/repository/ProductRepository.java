@@ -1,6 +1,6 @@
-package com.br.pedro.desafio2.repository;
+package com.br.pedro.produtoApi.repository;
 
-import com.br.pedro.desafio2.entity.Product;
+import com.br.pedro.produtoApi.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
