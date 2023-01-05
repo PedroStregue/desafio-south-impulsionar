@@ -1,5 +1,6 @@
 package com.br.pedro.produtoApi.service;
 
+import com.br.pedro.produtoApi.config.rabbitMQ.RabbitMqConfig;
 import com.br.pedro.produtoApi.convert.ProductConvert;
 import com.br.pedro.produtoApi.dto.ProductDTO;
 import com.br.pedro.produtoApi.entity.Product;
@@ -22,6 +23,9 @@ import java.util.stream.Collectors;
 public class ProductServices {
     @Autowired
     ProductRepository rep;
+
+    @Autowired
+    RabbitMqService rabbitMqService;
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -153,5 +157,15 @@ public class ProductServices {
         }
         return s.toString();
 
+    }
+
+    public ProductDTO changeStockAmount(Long id, Integer stockAmount){
+        Optional<Product> productOpt = rep.findById(id);
+
+        Product product = productOpt.get();
+        product.setStockAmount(stockAmount);
+
+        rabbitMqService.sendMessage();
+        return null;
     }
 }
