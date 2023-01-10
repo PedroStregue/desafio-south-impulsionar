@@ -6,6 +6,7 @@ import com.br.pedro.produtoApi.dto.ProductDTO;
 import com.br.pedro.produtoApi.entity.Product;
 import com.br.pedro.produtoApi.exception.ObjectNotFoundException;
 import com.br.pedro.produtoApi.repository.ProductRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.opencsv.CSVReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -159,13 +160,14 @@ public class ProductServices {
 
     }
 
-    public ProductDTO changeStockAmount(Long id, Integer stockAmount){
-        Optional<Product> productOpt = rep.findById(id);
-
-        Product product = productOpt.get();
+    public void changeStock(Long id, Integer stockAmount){
+        var productOpt = rep.findById(id);
+        var product = productOpt.get();
         product.setStockAmount(stockAmount);
-
-        rabbitMqService.sendMessage();
-        return null;
+        try {
+            rabbitMqService.sendMessage("amq.direct", "ProductQueue",ProductConvert.entityToDTO(product),"PRODUCT_CHANGED");
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -14,11 +14,13 @@ public class RabbitMqService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    public void sendMessage(String exchange, String routingKey, ProductDTO productDTO) throws JsonProcessingException {
-        var jsonProduct = objectMapper.writeValueAsString(productDTO);
-        rabbitTemplate.convertAndSend(exchange,routingKey,jsonProduct, message -> {
-            message.getMessageProperties().setHeader("EVENT","PRODUCT_CHANGED");
+    public void sendMessage(String exchange, String routingKey, ProductDTO productDTO, String header) throws JsonProcessingException {
+        var productJson = objectMapper.writeValueAsString(productDTO);
+
+        rabbitTemplate.convertAndSend(exchange,routingKey,productJson, message -> {
+            message.getMessageProperties().setHeader("EVENT",header);
             return message;
         });
+
     }
 }

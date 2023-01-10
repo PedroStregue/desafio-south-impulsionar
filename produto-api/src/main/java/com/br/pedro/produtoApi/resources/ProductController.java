@@ -3,6 +3,7 @@ package com.br.pedro.produtoApi.resources;
 import com.br.pedro.produtoApi.dto.ProductDTO;
 import com.br.pedro.produtoApi.entity.Product;
 import com.br.pedro.produtoApi.service.ProductServices;
+import com.br.pedro.produtoApi.service.RabbitMqService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,9 @@ import java.net.URI;
 public class ProductController {
     @Autowired
     ProductServices services;
+
+    @Autowired
+    RabbitMqService rabbitMqService;
 
 
     @PostMapping
@@ -71,5 +75,12 @@ public class ProductController {
         var productsList = services.insertByCSV(file);
 
         return ResponseEntity.ok(productsList);
+    }
+
+    @PutMapping("/change-stock/{id}")
+    public ResponseEntity changeStock(@PathVariable long id, @RequestBody Integer stock){
+        services.changeStock(id,stock);
+
+        return ResponseEntity.ok().build();
     }
 }
