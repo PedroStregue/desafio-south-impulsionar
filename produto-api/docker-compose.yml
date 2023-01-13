@@ -16,6 +16,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       - db_produtos_api
+      - rabbitmq
 
   db_produtos_api:
     container_name: db_produtos_api
