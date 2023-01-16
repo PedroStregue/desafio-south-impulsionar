@@ -165,7 +165,7 @@ public class ProductServices {
         var product = productOpt.get();
         product.setStockAmount(stockAmount);
         try {
-            rabbitMqService.sendMessage("amq.direct", "ProductQueue",ProductConvert.entityToDTO(product),"PRODUCT_CHANGED");
+            rabbitMqService.sendMessage("amq.fanout", "ProductQueue",ProductConvert.entityToDTO(product),"PRODUCT_CHANGED");
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

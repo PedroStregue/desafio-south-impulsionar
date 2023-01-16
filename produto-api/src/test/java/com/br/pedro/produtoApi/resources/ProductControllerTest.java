@@ -1,6 +1,7 @@
 package com.br.pedro.produtoApi.resources;
 
 import com.br.pedro.produtoApi.creator.ProductCreator;
+import com.br.pedro.produtoApi.service.RabbitMqService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 public class ProductControllerTest {
     @Autowired
     private MockMvc mockMvc;
+
 
     @Autowired
     private ObjectMapper objectMapper;
