@@ -58,7 +58,6 @@ public class ProductServices {
         if(optProductToEdit.isPresent()) {
 
             Product productToEdit = optProductToEdit.get();
-
             productToEdit.setName(product.getName());
             productToEdit.setPrice(product.getPrice());
             productToEdit.setCategory(product.getCategory());
@@ -69,12 +68,14 @@ public class ProductServices {
             productToEdit.setMaterial(product.getMaterial());
             productToEdit.setExpDate(product.getExpDate());
             productToEdit.setFabDate(product.getFabDate());
-            rep.save(productToEdit);
-            return ProductConvert.entityToDTO(productToEdit);
+
+            return ProductConvert.entityToDTO(rep.save(productToEdit));
         }else{
             return null;
         }
     }
+
+
 
     public ResponseEntity delete(long id){
         Optional<Product> optProductToDelete = rep.findById(id);

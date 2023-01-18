@@ -30,17 +30,14 @@ public class ProductConsumer {
 
         var messageHeader = message.getHeaders().get("EVENT");
         var productBody = message.getPayload();
-//        log.info(messageHeader.toString());
-//        log.info(productBody);
         switch(messageHeader.toString()){
             case "PRODUCT_CHANGED":
-                rep.save(product);
-                break;
             case "CREATE":
+            case "UPDATE":
                 rep.save(product);
                 break;
-            case "UPDATE":
-                services.update(product.getId(), product);
+            case "DELETE":
+                rep.delete(product);
                 break;
         }
 

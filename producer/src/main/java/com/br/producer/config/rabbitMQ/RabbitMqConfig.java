@@ -1,12 +1,12 @@
-package com.br.pedro.produtoApi.config.rabbitMQ;
+package com.br.producer.config.rabbitMQ;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 @Configuration
 public class RabbitMqConfig {
@@ -28,5 +28,16 @@ public class RabbitMqConfig {
     public Binding binding(Queue queue,FanoutExchange exchange){
        return new Binding(queue.getName(), Binding.DestinationType.QUEUE, exchange().getName(), queue.getName(),null);
     }
-
+//    @PostConstruct
+//    private void addQueue(){
+//       Queue productQueue = this.queueProduct(QUEUE_NAME);
+//
+//       FanoutExchange exchange = this.exchange();
+//
+//       Binding binding = this.binding(productQueue, exchange);
+//
+//       this.amqpAdmin.declareQueue(productQueue);
+//       this.amqpAdmin.declareExchange(exchange);
+//       this.amqpAdmin.declareBinding(binding);
+//    }
 }

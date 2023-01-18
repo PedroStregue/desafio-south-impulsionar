@@ -24,7 +24,6 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity save(@RequestBody Product product) {
-
         ProductDTO p = services.addToDb(product);
 
         URI location = getUri(p.getId());
@@ -53,7 +52,6 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity edit(@PathVariable long id, @RequestBody Product product) {
-        product.setId(id);
 
         ProductDTO p = services.update(id, product);
 
