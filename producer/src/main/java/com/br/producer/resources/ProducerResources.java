@@ -56,10 +56,8 @@ public class ProducerResources {
 
     @PutMapping("/{id}")
     public ResponseEntity edit(@PathVariable long id, @RequestBody Product product) {
-
-        ProductDTO p = services.update(id, product);
         System.out.println(product);
-        System.out.println(p);
+        ProductDTO p = services.update(id, product);
         return p != null ?
                 ResponseEntity.ok(p):
                 ResponseEntity.notFound().build();

@@ -9,5 +9,4 @@ spring:
 url:
   produto-api: ${PRODUTO_API_URL:localhost}
   port: ${PRODUTO_API_PORT:8080}
-server:
-  port: 8081
+

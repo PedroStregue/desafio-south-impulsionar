@@ -1,7 +1,8 @@
-package com.br.pedro.produtoApi.creator;
+package com.br.producer.creator;
 
-import com.br.pedro.produtoApi.dto.ProductDTO;
-import com.br.pedro.produtoApi.entity.Product;
+
+import com.br.producer.dto.ProductDTO;
+import com.br.producer.entity.Product;
 import com.github.javafaker.Faker;
 
 import java.text.ParseException;
@@ -9,9 +10,9 @@ import java.text.SimpleDateFormat;
 
 public class ProductCreator {
 
-    public static Product createFixedRequest() throws ParseException {
+    public static ProductDTO createFixedRequest() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Product product = Product.builder()
+        ProductDTO product = ProductDTO.builder()
                 .name("nome1").code("11111111")
                 .barCode("111111111111").color("azul")
                 .fabDate("11/11/1111").expDate("11/11/1111")
@@ -21,9 +22,9 @@ public class ProductCreator {
         return product;
     }
 
-    public static Product createFakeRequest(){
+    public static ProductDTO createFakeRequest(){
         var faker = new Faker();
-        Product product = Product.builder()
+        ProductDTO product = ProductDTO.builder()
                 .name(faker.commerce().productName())
                 .category(faker.commerce().department())
                 .barCode(faker.random().toString())

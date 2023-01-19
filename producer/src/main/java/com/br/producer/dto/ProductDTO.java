@@ -1,12 +1,12 @@
 package com.br.producer.dto;
 
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.With;
+import lombok.*;
 
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @With
 public class ProductDTO {

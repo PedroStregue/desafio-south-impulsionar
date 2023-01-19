@@ -5,6 +5,7 @@ import com.br.producer.config.restTemplate.RestTemplateConfig;
 import com.br.producer.convert.ProductConvert;
 import com.br.producer.dto.ProductDTO;
 import com.br.producer.entity.Product;
+import com.br.producer.services.exceptions.EntityNotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.opencsv.CSVReader;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,9 +64,11 @@ public class ProducerServices {
     }
 
     public ProductDTO update(long id, Product product){
+        System.out.println(product);
         ProductDTO productToEdit = this.findById(id);
+        System.out.println(productToEdit);
 
-        Product editedProduct = updateProduct(product,ProductConvert.dtoToEntity(productToEdit));
+        Product editedProduct = updateProduct(ProductConvert.dtoToEntity(productToEdit),product);
 
         try {
             rabbitMqService.sendMessage(RabbitMqConfig.EXCHANGE_NAME,"ProductQueue",ProductConvert.entityToDTO(editedProduct),"UPDATE");
@@ -72,7 +76,7 @@ public class ProducerServices {
             throw new RuntimeException(e);
         }
 
-        return productToEdit;
+        return ProductConvert.entityToDTO(editedProduct);
     }
 
     public Product updateProduct(Product productToEdit, Product actualProduct){
@@ -90,13 +94,13 @@ public class ProducerServices {
     }
 
     public ProductDTO findById(long id){
-       HttpHeaders httpHeader = new HttpHeaders();
-       httpHeader.add("Authorization","Basic " + this.basicAuth("user:admin"));
-       var request = new HttpEntity<String>(httpHeader);
+        restTemplate.getInterceptors().add(new BasicAuthenticationInterceptor("user","admin"));
+        ProductDTO product = restTemplate.getForObject(restTemplateConfig.url().concat("/{id}"), ProductDTO.class, id);
 
-       ResponseEntity<Product> product = restTemplate.exchange(restTemplateConfig.url().concat("/").concat(String.valueOf(id)), HttpMethod.GET, request, new ParameterizedTypeReference<Product>() {});
-
-       return ProductConvert.entityToDTO(product.getBody());
+        if (product == null){
+            throw new EntityNotFoundException("Produto não encontrado");
+        }
+       return product;
     }
 
     public List<ProductDTO> getAll(){
